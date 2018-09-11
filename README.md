@@ -2,7 +2,7 @@
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/sftx-comm-control.svg?style=flat-square)](https://npmjs.com/package/sftx-comm-control)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/spatie/sftx-comm-control/master.svg?style=flat-square)](https://travis-ci.org/spatie/sftx-comm-control)
+[![Build Status](https://api.travis-ci.org/Dickkk/sftx-comm-control.svg?branch=master)](https://travis-ci.org/Dickkk/sftx-comm-control)
 [![npm](https://img.shields.io/npm/dt/sftx-comm-control.svg?style=flat-square)](https://www.npmjs.com/package/sftx-comm-control)
 
 ## 说明

@@ -1,6 +1,6 @@
 {
   "name": "sftx-comm-control",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "description": "sftx team control lib",
   "author": "zhangchao <zhangchao_jr@dhcc.com.cn>",
   "private": false,
@@ -14,6 +14,15 @@
     "prepublish": "npm run test; npm run build",
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dickkk/sftx-comm-control.git"
+  },
+  "keywords": [
+    "vue"
+  ],
+  "license": "MIT",
+  "homepage": "https://www.npmjs.com/package/sftx-comm-control",
   "dependencies": {
     "vue": "^2.5.2"
   },
