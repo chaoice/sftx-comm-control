@@ -1,0 +1,26 @@
+{
+    "root": true,
+    "parserOptions": {
+    "parser": "babel-eslint",
+    "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "experimentalObjectRestSpread": true
+        }
+    },
+    "env": {
+        "browser": true,
+        "node":true,
+        "es6": true,
+      "jest":true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": ["error", 4, {
+            "SwitchCase": 1
+        }],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "no-console": ["off"]
+    }
+}
