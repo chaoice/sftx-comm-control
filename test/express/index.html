@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app" style="background: #f6f6f6">
+</div>
+</body>
+</html>
+<script>
+const ops=[{name:"交易金额",value:"txAmt"},{name:"开户金额",value:"opnAmt"}];
+const exps=[{name:"加",value:"+"},{name:"减",value:"-"}];
+
+function save(result){
+    alert('new result='+result);
+}
+function cancle(){
+    alert('new cancle');
+}
+var data='txAmt+1+3+txAmt+4^2';
+var vm=sftxCommControl.ExpressionApp('#app',ops,'name','value',exps,save,cancle,data);
+vm.data='txAmt+opnAmt';
+</script>

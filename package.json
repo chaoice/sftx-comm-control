@@ -1,6 +1,6 @@
 {
   "name": "sftx-comm-control",
-  "version": "1.0.27",
+  "version": "1.0.32",
   "description": "sftx team control lib",
   "author": "zhangchao <zhangchao_jr@dhcc.com.cn>",
   "private": false,
@@ -24,7 +24,9 @@
   "license": "MIT",
   "homepage": "https://www.npmjs.com/package/sftx-comm-control",
   "dependencies": {
-    "vue": "^2.5.2"
+    "velocity-animate": "^1.5.2",
+    "vue": "^2.5.2",
+    "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -67,7 +69,7 @@
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
-    "url-loader": "^0.5.8",
+    "url-loader": "^1.1.1",
     "vue-jest": "^2.6.0",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",

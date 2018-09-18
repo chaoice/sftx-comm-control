@@ -9,9 +9,9 @@
     </div>
     <div :class="$style.content">
       <ul :class="$style.tool">
-        <li><button :class="$style.button" @click="addClick">添加</button></li>
-        <li><button :class="$style.button" @click="mergeClick">合成</button></li>
-        <li><button :class="$style.button" @click="splitClick">拆分</button></li>
+        <li v-for="(tool,index) in toolBar" :key="index">
+          <button :class="$style.button" @click="addClick(tool)">{{tool.name}}</button>
+        </li>
       </ul>
     </div>
     <div :class="$style.header">
@@ -23,21 +23,28 @@
     </div>
     <div :class="$style.content">
       <ul :class="$style.expUl" >
-        <li v-for="(opds,index) in opDatas" :key="'opDatas'+index"
-            type="op">
-          <select  v-model="opds.val" v-if="index%2===0" >
-            <option  v-for="(op,index) in ops" :value="op.value" :key="'ops'+index">
-              {{op.name}}
-            </option>
-          </select>
-          <select v-model="opds.val" v-if="index%2===1">
-            <option v-for="(exp,index) in exps" :value="exp.value" :key="'exps'+index">
-              {{exp.name}}
-            </option>
-          </select>
-        </li>
-
-
+        <draggable v-model="opDatas">
+          <transition-group  name="list"
+                             v-on:before-enter="beforeEnter"
+                             v-on:enter="enter"
+                             v-on:leave="leave"
+                             :move-class="$style.fliplistmove" tag="p">
+            <li v-for="(opds,indexop) in opDatas" :key="indexop" :style="{width:opds.template.type==='label'?'3em':'auto'}">
+              <svg @click="deleteClick(opds)"  version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+<metadata> Svg Vector Icons : http://www.sfont.cn </metadata>
+<g><g><path d="M500,10C229.3,10,10,229.4,10,500s219.3,490,490,490s490-219.4,490-490S770.7,10,500,10z M727.1,640.4c23.9,23.9,23.9,62.7,0,86.6C715.1,739,699.4,745,683.8,745c-15.7,0-31.4-6-43.3-17.9L500,586.6L359.6,727.1C347.6,739,331.9,745,316.3,745c-15.7,0-31.4-6-43.3-17.9c-23.9-23.9-23.9-62.7,0-86.6L413.4,500L272.9,359.6c-23.9-23.9-23.9-62.7,0-86.6s62.7-23.9,86.6,0L500,413.4l140.4-140.4c23.9-23.9,62.7-23.9,86.6,0s23.9,62.7,0,86.6L586.6,500L727.1,640.4L727.1,640.4z"/></g></g>
+</svg>
+              <!--<img src="./assert/delete.png" @click="deleteClick(opds)"/>-->
+              <select  v-model="opds.template.value" v-if="opds.template.type==='select'" >
+                <option  v-for="(op,selectIndex) in getThis[opds.template.source]" :value="op[getThis[opds.template.valueField]]" :key="selectIndex">
+                  {{op[getThis[opds.template.textField]]}}
+                </option>
+              </select>
+              <input type="text" v-model="opds.template.value" v-if="opds.template.type==='input'"/>
+              <input type="text" v-model="opds.template.value" style="width:1em;" disabled v-if="opds.template.type==='label'"/>
+            </li>
+          </transition-group>
+        </draggable>
       </ul>
     </div>
     <div :class="$style.header">
@@ -54,82 +61,285 @@
     <button :class="[$style.button,$style.submitButton]" @click="cancleClick">取消</button>
     <button :class="[$style.button,$style.submitButton]" @click="saveClick">保存</button>
 
+
   </div>
+
 </template>
 
 <script>
+  import Velocity from 'velocity-animate';
+  import draggable from 'vuedraggable'
+  var Expression=
+    {
+      created(){
+        //判断传进来的
+        console.log('createed');
+      },
+      name: "Expression",
+      props: {
+        ops: {
+          type: Array,
+        },
+        opsText:{
+          type:String,
+        },
+        opsValue:{
+          type:String,
+        },
+        exps:{
+          type: Array,//运算符 {name:'幂^',value:'^'}
+        },
+      },
 
-  export default {
-    name: "Expression",
-    props: {
-      ops: {
-        type: Array,
-      },
-      exps:{
-        type: Array,
-      }
-    },
-    data(){
-      return {
-        data:"",
-        key:"",
-        opDatas:[],
-        value:"opnAmt",
-        opval:"-"
-      };
-    },
-    watch:{
-      data:function () {
-        let dataStr=this.data;
-        this.exps.forEach(x=>{
-          dataStr=dataStr.replace(x.value,','+x.value+',');
-        });
-        this.opDatas=dataStr.split(',').map(x=>{return {val:x};});
-        console.log('data change');
-      }
+      data(){
+        //默认的添加上外围传的。
+        let toolBar=[
+          {
+            name:'因子'
+            ,template:{
+              type:'select',
+              source:'ops',
+              textField:'opsText',
+              valueField:'opsValue',
+              value:''
 
-    }
-    ,
-    methods:{
-      saveClick(){
-        this.$emit('save');
-      },
-      cancleClick(){
-        this.$emit('cancle');
-      },
-      addClick(){
-        if(this.opDatas.length===0)
+            }
+          },
+          {
+            name:'输入'
+            ,template:{
+              type:'input',
+              value:''
+            }
+          },
+          {
+            name:'('
+            ,template:{
+              type:'label',
+              value:'('
+            }
+          },
+          {
+            name:')'
+            ,template:{
+              type:'label',
+              value:')'
+            }
+          },
+          {
+            name:'+'
+            ,template:{
+              type:'label',
+              value:'+'
+            }
+          },
+          {
+            name:'-'
+            ,template:{
+              type:'label',
+              value:'-'
+            }
+          },
+          {
+            name:'*'
+            ,template:{
+              type:'label',
+              value:'*'
+            }
+          },
+          {
+            name:'/'
+            ,template:{
+              type:'label',
+              value:'/'
+            }
+          },
+          {
+            name:'%'
+            ,template:{
+              type:'label',
+              value:'%'
+            }
+          },
+
+
+          {
+            name:'幂^'
+            ,template:{
+              type:'label',
+              value:'^'
+            }
+          },
+
+        ].concat(this.exps.map(x=>{
+          return {
+            name:x.name,
+            template:{
+              type:'label',
+              value:x.value
+            }
+          }
+        }));
+        //去重
+        for(let i=0,len=toolBar.length;i<len;)
         {
-          this.opDatas=[...this.opDatas,{val:""}];
+          if(toolBar.filter(x=>{return x.template.type==='label'&&x.template.value===toolBar[i].template.value;}).length>1)
+          {
+            toolBar.splice(i,1);
+            len--;
+          }
+          else {
+            i++;
+          }
         }
-        else
-        {
-          this.opDatas=[...this.opDatas,{val:""},{val:""}];
-        }
-        console.log('addClick');
-      },
-      mergeClick(){
-        console.log('mergeClick');
-      },
-      splitClick(){
-        console.log('splitClick');
-      }
-    },
-    computed:{
-      listerns(){
         return {
-          ...this.$listeners,
-          input: event => this.$emit('input', event.target.value),
+          data:"",
+          key:"",
+          opDatas:[],
+          value:"opnAmt",
+          opval:"-",
+          toolBar:toolBar
+        };
+      },
+      watch:{
+        data:function () {
+          let dataStr=this.data;
+          this.toolBar.forEach(x=>{
+            if(x.template.type==='label') {
+              let reg=new RegExp("['"+x.template.value+"']",'g');
+              dataStr = dataStr.replace(reg, ',' + x.template.value + ',');
+            }
+          });
+          this.opDatas=dataStr.split(',').map(x=>{
+            //是否是因子
+            let op=this.ops.find(y=>{return y[this.opsValue]===x});
+            if(op!=undefined)
+            {
+              return {
+                name:'因子'
+                ,template:{
+                  type:'select',
+                  source:'ops',
+                  textField:'opsText',
+                  valueField:'opsValue',
+                  value:x
+
+                }
+              };
+            }
+            //操作符
+            let tool=this.toolBar.find(y=>{return y.template.type==='label'&&y.template.value===x;});
+            if(tool!=undefined)
+            {
+              return JSON.parse(JSON.stringify(tool));
+            }
+            else
+            {
+              //输入
+              return {
+                name:'输入'
+                ,template:{
+                  type:'input',
+                  value:x
+                }
+              };
+            }
+          });
+          console.log('data change');
+        }
+
+      }
+      ,
+      methods:{
+        beforeEnter: function (el) {
+          el.style.opacity = 0
+          el.style.height = 0
+        },
+        enter: function (el, done) {
+          var delay = el.dataset.index * 150
+          setTimeout(function () {
+            Velocity(
+              el,
+              { opacity: 1, height: '1.6em' },
+              { complete: done }
+            )
+          }, delay)
+        },
+        leave: function (el, done) {
+          var delay = el.dataset.index * 150
+          setTimeout(function () {
+            Velocity(
+              el,
+              { opacity: 0, height: 0 },
+              { complete: done }
+            )
+          }, delay)
+        },
+        saveClick(){
+          this.$emit('save');
+        },
+        cancleClick(){
+          this.$emit('cancle');
+        },
+        addClick(tool){
+          this.opDatas=[...this.opDatas,JSON.parse(JSON.stringify(tool))];
+        },
+        deleteClick:function (opds) {
+          let rowIndex= this.opDatas.indexOf(opds);
+          this.opDatas.splice(rowIndex,1);
+        }
+
+      },
+      computed:{
+        listerns(){
+          return {
+            ...this.$listeners,
+            input: event => this.$emit('input', event.target.value),
+          }
+        },
+        resultExp(){
+          return this.opDatas.map(x=>{
+            return x.template.value;
+          }).join("");
+        },
+        getThis(){
+          return this;
         }
       },
-      resultExp(){
-        return this.opDatas.map(x=>{
-          return x.val;
-        }).join("");
+      components: {
+        draggable,
       }
-    }
 
+    }
+  function ExpressionApp(el,ops,opsText,opsValue,exps,save,cancle,data) {
+    const vueapp=new Vue({
+      el: el,
+      components: { Expression },
+      template: '<Expression :ops="ops" opsText="name" opsValue="value" :exps="exps"  v-on:save="save" v-on:cancle="cancle"/>',
+      data:{
+        ops:ops,
+        exps:exps
+      },
+      methods:{
+        save() {
+          // alert('save, data='+this.$children[0].resultExp);
+          save.call(this,this.$children[0].resultExp);
+          //进行业务处理
+          //关闭窗口
+        },
+        cancle() {
+          // alert('cancle');
+          cancle.call(this);
+          //关闭窗口
+        }
+      }
+    })
+    var expressVm=vueapp.$children[0];
+    expressVm.data=data;
+    return expressVm;
   }
+  export default Expression;
+  export {ExpressionApp};
 </script>
 <style lang="scss" module>
   .header{
@@ -172,13 +382,6 @@
     padding: 1em;
   }
   .tool {
-    /*list-style-type: none;*/
-    /*margin: 0;*/
-    /*padding: 0;*/
-    /*left: 30px;*/
-    /*right: 30px;*/
-    /*top: 10px;*/
-    /*height: 40px;*/
     box-shadow: 0 1px 3px rgba(26,26,26,.1);
     background: #f3eeee;
     line-height: 40px;
@@ -192,19 +395,26 @@
   .expUl{
     list-style-type: none;
     width: 100%;
-    li[type='op']{
+    svg{
+      position: relative;
+      top: -1em;
+      right: 1em;
+      width: 1em;
+      cursor: pointer;
+    }
+    li{
       background: #f0ffff;
       display: inline-block;
       position: relative;
       margin: 0.6em 0.6em;
-      width: 8em;
+      width: auto;
       box-shadow: 3px 3px 5px #efc4b0;
       &:hover {
         box-shadow: 0px 0px 4px 3px #81d4b4;
       }
       padding:10px;
-      select{
-        width: 100%;
+      select,input{
+        width: 8em;
         height: 100%;
         font-size: 1em;
         background: azure;
@@ -214,27 +424,9 @@
         cursor: pointer;
       }
     }
-    li[type='exp']{
-
-      background: #f0ffff;
-      display: inline-block;
-      margin: 10px ;
-      box-shadow: 3px 3px 5px #efc4b0;
-      padding:10px;
-      &:hover {
-        box-shadow: 0px 0px 4px 3px #81d4b4;
-      }
-      select{
-        width: 100%;
-        height: 100%;
-        font-size: 1em;
-        background: azure;
-        border: aliceblue;
-        font-weight: bold;
-        color: #72b0e6;
-        cursor: pointer;
-      }
-    }
+  }
+  .fliplistmove {
+    transition: transform 1s;
   }
 
 

@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Expression from './components/Expression';
+import {ExpressionApp} from './components/Expression';
 
 var components = [
     Expression
@@ -12,7 +13,7 @@ export default {
         });
     },
 };
-export { Expression};
+export { Expression,ExpressionApp};
 
 
 

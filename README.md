@@ -68,6 +68,51 @@ const vueapp=new Vue({
 └── webpack.config.js
 ```
 
+ ***
+
+## 组件
+
+### Expression表达式
+***
+
+> script直接引入方式 demo在test/express目录
+
+1、  引入script
+
+    <script src="sftx-comm-control/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+2、  初始化
+```
+const ops=[{name:"交易金额",value:"txAmt"},{name:"开户金额",value:"opnAmt"}];
+const exps=[{name:"加",value:"+"},{name:"减",value:"-"}];
+
+function save(result){
+    alert('new result='+result);
+    //根据result做逻辑处理
+    //关闭窗口
+}
+function cancle(){
+    alert('new cancle');
+    //关闭窗口
+}
+var data='txAmt+1+3+txAmt+4^2';
+var vm=sftxCommControl.ExpressionApp('#app',ops,'name','value',exps,save,cancle,data);
+vm.data='txAmt+opnAmt';
+```
+
+  第一个参数'#app'是标签的id，第二个标签'ops'是因子数组，第三个参数'name'是因子数组中显示在下拉框的值，
+value:因子的值，exps:自定义表达式，格式是[{name:' ',value: ' '}]，save是点击保存的回调函数。cancle
+是点击取消的回调函数，data是初始化组件的表达式。返回的是vm， 可以通过修改vm.data属性，动态改变表达式。
+
+> webpack方式引入
+
+webpack方式就是引入的方式不一样，通过npm commonjs方式直接引用。其他参数、用法一样。
+```
+import {ExpressionApp} from 'sftx-comm-control';
+var vm =ExpressionApp('#app',ops,'name','value',exps,save,cancle,data);
+```
+
+
 
 
 
