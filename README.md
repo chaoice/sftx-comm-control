@@ -159,3 +159,4 @@ import {ExpressionApp} from 'sftx-comm-control';
 | save | 保存回调函数 | 函数，参数为表达式结果 |
 | cancle | 取消回调函数 | 函数 |
 | data | 动态修改界面的表达式 | 'txAmt+1' |
+
