@@ -76,13 +76,15 @@ const vueapp=new Vue({
 ***
 
 #### ***引入使用***
+***
 > script直接引入方式 demo在test/express目录
 
-1、  引入script
-
-    <script src="sftx-comm-control/lib/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-2、  初始化
+1. 引入script
+~~~
+    &lt;script src="sftx-comm-control/lib/index.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue"&gt;&lt;/script&gt;
+~~~
+2. 初始化
 ```
 const ops=[{name:"交易金额",value:"txAmt"},{name:"开户金额",value:"opnAmt"}];
 const exps=[{name:"加",value:"+"},{name:"减",value:"-"}];
@@ -100,6 +102,7 @@ var data='txAmt+1+3+txAmt+4^2';
 var vm=sftxCommControl.ExpressionApp('#app',ops,'name','value',exps,save,cancle,data);
 vm.data='txAmt+opnAmt';
 ```
+
 
   第一个参数'#app'是标签的id，第二个标签'ops'是因子数组，第三个参数'name'是因子数组中显示在下拉框的值，
 value:因子的值，exps:自定义表达式，格式是[{name:' ',value: ' '}]，save是点击保存的回调函数。cancle
@@ -143,3 +146,16 @@ import {ExpressionApp} from 'sftx-comm-control';
 | data | 表达式初始化值 | 在js里使用vm.data='txAmt+1'动态赋值|
 | ops | 因子下拉赋值 | 在js里使用vm.ops=[{filler:'交易金额',brf:'txAmt'},{name:'开户金额',value:'opnAmt'}] 动态赋值 |
 
+> ExpressionApp(el,ops,opsText,opsValue,exps,save,cancle,data)函数是对Express构造过程的一个封装，会构造一个express的vue组件，并且把vm实例返回。
+函数对应的参数如下
+
+| 属性名 | 描述 | 例子 |
+| ------ | ------ | ------ |
+| el | 标签选择，将组件挂在哪个elemnent下面 | '#expressionid'|
+| ops | 因子数组 | [{name:'交易金额',value:'txAmt'},{name:'开户金额',value:'opnAmt'}] 动态赋值 |
+| opsText | 因子下拉框的显示内容，对应ops | 'name' |
+| opsValue | 因子下拉框的值，对应ops | 'value' |
+| exps | 重写的表达式 |[{name:'加',value:'+'},{name:'减',value:'-'}]  |
+| save | 保存回调函数 | 函数，参数为表达式结果 |
+| cancle | 取消回调函数 | 函数 |
+| data | 动态修改界面的表达式 | 'txAmt+1' |
