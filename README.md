@@ -80,10 +80,10 @@ const vueapp=new Vue({
 > script直接引入方式 demo在test/express目录
 
 1. 引入script
-~~~
+```
     &lt;script src="sftx-comm-control/lib/index.js"&gt;&lt;/script&gt;
     &lt;script src="https://cdn.jsdelivr.net/npm/vue"&gt;&lt;/script&gt;
-~~~
+```
 2. 初始化
 ```
 const ops=[{name:"交易金额",value:"txAmt"},{name:"开户金额",value:"opnAmt"}];
@@ -112,19 +112,19 @@ value:因子的值，exps:自定义表达式，格式是[{name:' ',value: ' '}]�
 
 webpack方式就是引入的方式不一样，通过npm commonjs方式直接引用。其他参数、用法一样。
 1. 添加html标签
-~~~
+```
 &lt;div id="expressSetting" class="easyui-window"   title="新增账户" style="width:600px;height:400px"
 			   data-options="modal:true,closed:true"&gt;
 	&lt;div id="expressApp" style="background: #f6f6f6"&gt;
 &lt;/div&gt;
-~~~
+```
 
 2. 添加引用
 ```
 import {ExpressionApp} from 'sftx-comm-control';
 ```
 3. 初始化
-~~~
+```
     let ops=[{filler:'交易金额',brf:'txAmt'},{name:'开户金额',value:'opnAmt'}];
     let exps=[{name:'加',value:'+'},{name:'减',value:'-'}];
     let save=(result)=>{
@@ -137,7 +137,7 @@ import {ExpressionApp} from 'sftx-comm-control';
     };
     let expressVm =ExpressionApp('#expressApp',ops,'filter','brf',exps,save,cancle,'');
     window.expressionVm = expressVm;
-~~~
+```
 #### ***属性***
 ***
 
