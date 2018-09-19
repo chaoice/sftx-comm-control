@@ -69,6 +69,7 @@
 <script>
   import Velocity from 'velocity-animate';
   import draggable from 'vuedraggable'
+  import Vue from 'vue';
   var Expression=
     {
       created(){
@@ -276,9 +277,13 @@
           }, delay)
         },
         saveClick(){
+          this.opDatas=[];
+          this.data="";
           this.$emit('save');
         },
         cancleClick(){
+          this.opDatas=[];
+          this.data="";
           this.$emit('cancle');
         },
         addClick(tool){

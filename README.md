@@ -75,6 +75,7 @@ const vueapp=new Vue({
 ### Expression表达式
 ***
 
+#### ***引入使用***
 > script直接引入方式 demo在test/express目录
 
 1、  引入script
@@ -107,12 +108,38 @@ value:因子的值，exps:自定义表达式，格式是[{name:' ',value: ' '}]�
 > webpack方式引入
 
 webpack方式就是引入的方式不一样，通过npm commonjs方式直接引用。其他参数、用法一样。
+1. 添加html标签
+~~~
+&lt;div id="expressSetting" class="easyui-window"   title="新增账户" style="width:600px;height:400px"
+			   data-options="modal:true,closed:true"&gt;
+	&lt;div id="expressApp" style="background: #f6f6f6"&gt;
+&lt;/div&gt;
+~~~
+
+2. 添加引用
 ```
 import {ExpressionApp} from 'sftx-comm-control';
-var vm =ExpressionApp('#app',ops,'name','value',exps,save,cancle,data);
 ```
+3. 初始化
+~~~
+    let ops=[{filler:'交易金额',brf:'txAmt'},{name:'开户金额',value:'opnAmt'}];
+    let exps=[{name:'加',value:'+'},{name:'减',value:'-'}];
+    let save=(result)=>{
+        let model=window.txmodelbandaccount.txExecMapDefs.find(x=>{return x.brf===window.expressionVm.key;});
+        model.mapExp=result;
+        $('#expressSetting').window('close');
+    };
+    let cancle=()=>{
+        $('#expressSetting').window('close');
+    };
+    let expressVm =ExpressionApp('#expressApp',ops,'filter','brf',exps,save,cancle,'');
+    window.expressionVm = expressVm;
+~~~
+#### ***属性***
+***
 
-
-
-
+| 属性名 | 描述 | 用法 |
+| ------ | ------ | ------ |
+| data | 表达式初始化值 | 在js里使用vm.data='txAmt+1'动态赋值|
+| ops | 因子下拉赋值 | 在js里使用vm.ops=[{filler:'交易金额',brf:'txAmt'},{name:'开户金额',value:'opnAmt'}] 动态赋值 |
 
