@@ -211,7 +211,9 @@
               dataStr = dataStr.replace(reg, ',' + x.template.value + ',');
             }
           });
-          this.opDatas=dataStr.split(',').map(x=>{
+          dataStr=dataStr.replace(/(^,*)|(,*$)/g, "");
+          this.opDatas=dataStr.split(',').filter(z=>{return z!=undefined&&z!=''}).map(x=>{
+
             //是否是因子
             let op=this.ops.find(y=>{return y[this.opsValue]===x});
             if(op!=undefined)
