@@ -279,14 +279,14 @@
           }, delay)
         },
         saveClick(){
+          this.$emit('save');
           this.opDatas=[];
           this.data="";
-          this.$emit('save');
         },
         cancleClick(){
+          this.$emit('cancle');
           this.opDatas=[];
           this.data="";
-          this.$emit('cancle');
         },
         addClick(tool){
           this.opDatas=[...this.opDatas,JSON.parse(JSON.stringify(tool))];
