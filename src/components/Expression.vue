@@ -199,6 +199,7 @@
         return {
           data:"",
           key:"",
+          opsData:this.ops,
           opDatas:[],
           value:"opnAmt",
           opval:"-",
@@ -230,7 +231,7 @@
                 name:'因子'
                 ,template:{
                   type:'select',
-                  source:'ops',
+                  source:'opsData',
                   textField:'opsText',
                   valueField:'opsValue',
                   value:x
