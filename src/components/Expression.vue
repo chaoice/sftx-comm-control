@@ -210,11 +210,12 @@
           let dataStr=this.data;
           this.toolBar.forEach(x=>{
             if(x.template.type==='label') {
+
               let reg=new RegExp("['"+x.template.value+"']",'g');
-              // if(x.template.value!='('&&x.template.value!=')')
-              // {
-              //   reg=new RegExp("('"+x.template.value+"')",'g');
-              // }
+              if(x.template.value.length>1)
+              {
+                reg=new RegExp(x.template.value,'g');
+              }
               dataStr = dataStr.replace(reg, ',' + x.template.value + ',');
             }
           });
