@@ -268,10 +268,10 @@
         getRegExp:function(exp){
           let rexp=exp;
           let ablabel=['~',"'",'!','@','#','￥','$','%','^','&','*','(',')','-','+','_','=,',':',']','|'];
-          for(var key in ablabel)
+          for(let i=0;i< ablabel.length;i++)
           {
-            let opsreg=new RegExp('\\'+ablabel[key],'g');
-            rexp=rexp.replace(opsreg,'\\'+ablabel[key]);
+            let opsreg=new RegExp('\\'+ablabel[i],'g');
+            rexp=rexp.replace(opsreg,'\\'+ablabel[i]);
           }
           return rexp;
         },
