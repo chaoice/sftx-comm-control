@@ -211,12 +211,14 @@
           let dataStr=this.data;
           this.toolBar.forEach(x=>{
             if(x.template.type==='label') {
+              //特殊字符处理
 
-              let reg=new RegExp("['"+x.template.value+"']",'g');
-              if(x.template.value.length>1)
-              {
-                reg=new RegExp(x.template.value,'g');
-              }
+              let regStr=this.getRegExp(x.template.value);
+              let reg=new RegExp(regStr,'g');
+              // if(x.template.value.length>1)
+              // {
+              //     reg=new RegExp(x.template.value,'g');
+              // }
               dataStr = dataStr.replace(reg, ',' + x.template.value + ',');
             }
           });
@@ -263,6 +265,16 @@
       }
       ,
       methods:{
+        getRegExp:function(exp){
+          let rexp=exp;
+          let ablabel=['~',"'",'!','@','#','￥','$','%','^','&','*','(',')','-','+','_','=,',':',']','|'];
+          for(var key in ablabel)
+          {
+            let opsreg=new RegExp('\\'+ablabel[key],'g');
+            rexp=rexp.replace(opsreg,'\\'+ablabel[key]);
+          }
+          return rexp;
+        },
         beforeEnter: function (el) {
           el.style.opacity = 0
           el.style.height = 0
